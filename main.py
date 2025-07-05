@@ -1,0 +1,90 @@
+import streamlit as st
+import pandas as pd
+import uuid
+from streamlit_autorefresh import st_autorefresh
+from fetchers.camera_fetcher import release_all_cameras
+from session.state_manager import initialize_session_state
+from fetchers.api_fetcher import fetch_data_from_api
+from fetchers.database_fetcher import fetch_data_from_db
+from fetchers.camera_fetcher import get_camera_frame
+from charts.plotter import render_chart
+
+# Inicjalizacja sesji
+initialize_session_state()
+
+st.title("📊 Twój Dashboard")
+
+# Odśwież co 1 sekundę
+st_autorefresh(interval=1000, limit=None, key="data_refresh")
+
+config_choice = st.sidebar.radio("Wybierz konfigurację", ["API", "Baza danych", "Kamery"])
+
+# --- Obsługa API ---
+if config_choice == "API":
+    from ui.api_config import api_config_ui
+    api_config_ui()
+
+# --- Obsługa Bazy Danych ---
+elif config_choice == "Baza danych":
+    from ui.db_config import db_config_ui
+    db_config_ui()
+
+# --- Obsługa Kamer ---
+elif config_choice == "Kamery":
+    from ui.camera_config import camera_config_ui
+    camera_config_ui()
+
+# --- Wyświetlanie wykresów i kamer ---
+st.subheader("📈 Wykresy")
+
+for idx, chart in enumerate(st.session_state.charts):
+    chart_id = chart["id"]
+    st.markdown(f"### Wykres {idx + 1} - {chart['title']} - Źródło: {chart['source']}")
+
+    # Przycisk usuwania wykresu
+    if st.button(f"🗑️ Usuń wykres {idx + 1}", key=f"delete_chart_{chart_id}"):
+        del st.session_state.chart_data[chart_id]
+        st.session_state.charts = [
+            c for c in st.session_state.charts if c["id"] != chart_id
+        ]
+        st.rerun()
+
+    # Pobierz nowe dane
+    if chart["source"] == "API":
+        new_data = fetch_data_from_api(chart["api_url"], chart["params"])
+    else:
+        new_data = fetch_data_from_db(
+            chart["db_connection"], chart["query"],
+            st.session_state.db_type, chart.get("collection_name", "")
+        )
+
+    if not new_data.empty:
+        st.session_state.chart_data[chart_id] = pd.concat(
+            [st.session_state.chart_data[chart_id], new_data], ignore_index=True
+        )
+
+    data = st.session_state.chart_data[chart_id]
+    if "max_points" in chart and len(data) > chart["max_points"]:
+        data = data.tail(chart["max_points"])
+
+    fig = render_chart(chart, data)
+
+st.subheader("📺 Podgląd kamer (na żywo)")
+
+for idx, camera in enumerate(st.session_state.cameras):
+    st.markdown(f"**Kamera:** `{camera}`")
+
+    # Przycisk usuwania kamery
+    if st.button(f"🗑️ Usuń kamerę {camera}", key=f"delete_camera_{camera}_{idx}"):
+        st.session_state.cameras.remove(camera)
+        st.rerun()
+
+    frame = get_camera_frame(camera)
+    if frame is not None:
+        st.image(frame, channels="RGB", use_container_width=True)
+    else:
+        st.error(f"❌ Nie udało się pobrać obrazu z kamery: {camera}")
+
+# Jeśli nie ma już kamer — zwolnij zasoby
+if not st.session_state.cameras:
+    release_all_cameras()

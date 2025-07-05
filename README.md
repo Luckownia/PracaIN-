@@ -26,6 +26,10 @@
 ## 🖥️ Zrzut ekranu
 
 
+https://github.com/user-attachments/assets/4d09c5e4-a796-4382-87c9-be0590658592
+
+
+
 ---
 
 ## 🔧 Uruchamianie projektu

@@ -72,16 +72,29 @@ Po uruchomieniu aplikacji w przeglądarce (domyślnie `http://localhost:8501`) w
 ## 🗂️ Struktura katalogów
 
 ├── main.py # Główna aplikacja Streamlit
+
 ├── charts/
+
 │ └── plotter.py # Tworzenie wykresów (Plotly)
+
 ├── fetchers/
+
 │ ├── api_fetcher.py # Pobieranie danych z API
+
 │ ├── camera_fetcher.py # Obsługa kamer (OpenCV)
+
 │ └── database_fetcher.py # Obsługa baz danych SQL/MongoDB/PostreSql
+
 ├── session/
+
 │ └── state_manager.py # Utrzymywanie stanu sesji użytkownika
+
 ├── ui/
+
 │ ├── api_config.py # UI do konfiguracji API i wykresów
+
 │ ├── camera_config.py # UI do dodawania i zarządzania kamerami
+
 │ └── db_config.py # UI do konfiguracji połączenia z bazą danych
+
 └── requirements.txt # Lista biblotek

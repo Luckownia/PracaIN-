@@ -34,4 +34,16 @@
 
 ```bash
 git clone https://github.com/Luckownia/PracaIN-.git
+```
+
+### 2. Pobranie wymaganych biblotek
+```bash
+pip install -r requirements.txt
+```
+### 3. Uruchomienie Aplikacji 
+
+```bash
+streamlit run .\main.py
+```
+
 

@@ -33,5 +33,5 @@
 ### 1. Klonowanie repozytorium
 
 ```bash
-git clone https://github.com/twoj-login/koudcaly.git
-cd koudcaly
+git clone https://github.com/Luckownia/PracaIN-.git
+

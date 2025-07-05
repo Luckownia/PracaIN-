@@ -46,4 +46,42 @@ pip install -r requirements.txt
 streamlit run .\main.py
 ```
 
+---
 
+## 🧪 Tryby działania aplikacji
+
+Po uruchomieniu aplikacji w przeglądarce (domyślnie `http://localhost:8501`) w panelu bocznym możesz wybrać jeden z trybów:
+
+### 🔹 API
+- Wprowadź adres URL API oraz opcjonalne parametry zapytania w formacie JSON.
+- Kliknij „Pobierz dane z API”, a następnie skonfiguruj wykres: tytuł, typ, kolumny X/Y oraz liczbę punktów.
+- Obsługiwane typy wykresów: Liniowy, Słupkowy, Punktowy.
+
+### 🔹 Baza danych
+- Wybierz typ bazy: PostgreSQL, MySQL lub MongoDB.
+- Wprowadź dane połączenia, zapytanie SQL lub kolekcję (dla MongoDB).
+- Po załadowaniu danych wybierz kolumny do wykresu oraz jego typ.
+
+### 🔹 Kamery
+- Dodaj adres URL strumienia z kamery (np. RTSP, MJPEG, HTTP).
+- Aplikacja pokaże obraz na żywo w czasie rzeczywistym.
+- Możesz dodawać i usuwać wiele kamer dynamicznie.
+
+---
+
+## 🗂️ Struktura katalogów
+
+├── main.py # Główna aplikacja Streamlit
+├── charts/
+│ └── plotter.py # Tworzenie wykresów (Plotly)
+├── fetchers/
+│ ├── api_fetcher.py # Pobieranie danych z API
+│ ├── camera_fetcher.py # Obsługa kamer (OpenCV)
+│ └── database_fetcher.py # Obsługa baz danych SQL/MongoDB/PostreSql
+├── session/
+│ └── state_manager.py # Utrzymywanie stanu sesji użytkownika
+├── ui/
+│ ├── api_config.py # UI do konfiguracji API i wykresów
+│ ├── camera_config.py # UI do dodawania i zarządzania kamerami
+│ └── db_config.py # UI do konfiguracji połączenia z bazą danych
+└── requirements.txt # Lista biblotek

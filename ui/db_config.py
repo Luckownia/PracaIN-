@@ -16,15 +16,26 @@ def db_config_ui():
         - **Port** – Standardowe porty:
             - PostgreSQL: `5432`
             - MySQL: `3306`
+            - MongoDB: `27017`
         - **Użytkownik / Hasło** – Dane logowania do bazy
         - **Nazwa bazy** – Nazwa konkretnej bazy, np. `sensors`
         """)
 
+
     db_type = st.sidebar.selectbox("Typ bazy danych", ["PostgreSQL", "MySQL", "MongoDB"],help="Wybierz typ bazy danych, z której korzystasz")
     st.session_state.db_type = db_type
 
+    if db_type == "PostgreSQL":
+        default_port = "5432"
+    elif db_type == "MySQL":
+        default_port = "3306"
+    elif db_type == "MongoDB":
+        default_port = "27017"
+    else:
+        default_port = ""
+
     host = st.sidebar.text_input("Host bazy danych",help="Adres serwera")
-    port = st.sidebar.text_input("Port", "5432" if db_type == "PostgreSQL" else "3306",help="Np. 5432 (PostgreSQL), 3306 (MySQL)")
+    port = st.sidebar.text_input("Port", default_port, help="Np. 5432 (PostgreSQL), 3306 (MySQL), 27017 (MongoDB)")
     user = st.sidebar.text_input("Użytkownik",help="Nazwa użytkownika bazy danych")
     password = st.sidebar.text_input("Hasło", type="password",help="Hasło użytkownika")
     database = st.sidebar.text_input("Nazwa bazy danych",help="Nazwa konkretnej bazy danych")
@@ -42,9 +53,12 @@ def db_config_ui():
     if db_type == "PostgreSQL":
         connection_string = f"postgresql://{user}:{quote_plus(password)}@{host}:{port}/{database}"
     elif db_type == "MySQL":
-        connection_string = f"mysql+pymysql://{user}:{quote_plus(password)}@{host}:{port}/{database}"
+        connection_string = f"mysql://{user}:{quote_plus(password)}@{host}:{port}/{database}"
     elif db_type == "MongoDB":
-        connection_string = f"mongodb://{user}:{quote_plus(password)}@{host}:{port}/{database}"
+        if user and password:
+            connection_string = f"mongodb://{quote_plus(user)}:{quote_plus(password)}@{host}:{port}/{database}"
+        else:
+            connection_string = f"mongodb://{host}:{port}/{database}"
     else:
         connection_string = ""
 

@@ -6,4 +6,5 @@ sqlalchemy>=2.0.0
 pymongo>=4.3.3
 opencv-python-headless>=4.8.0.76
 streamlit-autorefresh
+mysqlclient>=2.2.0
 PyMySQL>=1.1.0

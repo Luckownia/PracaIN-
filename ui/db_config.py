@@ -55,10 +55,18 @@ def db_config_ui():
     elif db_type == "MySQL":
         connection_string = f"mysql://{user}:{quote_plus(password)}@{host}:{port}/{database}"
     elif db_type == "MongoDB":
-        if user and password:
-            connection_string = f"mongodb://{quote_plus(user)}:{quote_plus(password)}@{host}:{port}/{database}"
+        if "mongodb.net" in host:
+            # Atlas (chmurowy MongoDB)
+            if user and password:
+                connection_string = f"mongodb+srv://{quote_plus(user)}:{quote_plus(password)}@{host}/{database}?retryWrites=true&w=majority"
+            else:
+                connection_string = f"mongodb+srv://{host}/{database}?retryWrites=true&w=majority"
         else:
-            connection_string = f"mongodb://{host}:{port}/{database}"
+            # Lokalny MongoDB (np. localhost:27017)
+            if user and password:
+                connection_string = f"mongodb://{quote_plus(user)}:{quote_plus(password)}@{host}:{port}/{database}"
+            else:
+                connection_string = f"mongodb://{host}:{port}/{database}"
     else:
         connection_string = ""
 

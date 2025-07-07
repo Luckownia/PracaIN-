@@ -16,7 +16,12 @@ def fetch_data_from_db(connection_string, query, db_type, collection_name=None):
         else:
             engine = create_engine(connection_string)
             data = pd.read_sql(query, engine)
-        data["timestamp"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        if "timestamp" in data.columns:
+            data["timestamp"] = pd.to_datetime(data["timestamp"])
+            data["timestamp"] = data["timestamp"].dt.round("1s")
+            data = data.sort_values("timestamp")
+
         return data
     except Exception as e:
         st.error(f"Błąd bazy danych: {e}")

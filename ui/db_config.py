@@ -42,7 +42,7 @@ def db_config_ui():
     if db_type == "PostgreSQL":
         connection_string = f"postgresql://{user}:{quote_plus(password)}@{host}:{port}/{database}"
     elif db_type == "MySQL":
-        connection_string = f"mysql://{user}:{quote_plus(password)}@{host}:{port}/{database}"
+        connection_string = f"mysql+pymysql://{user}:{quote_plus(password)}@{host}:{port}/{database}"
     elif db_type == "MongoDB":
         connection_string = f"mongodb://{user}:{quote_plus(password)}@{host}:{port}/{database}"
     else:

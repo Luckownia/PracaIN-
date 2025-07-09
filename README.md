@@ -41,6 +41,12 @@ https://github.com/user-attachments/assets/63286594-3f89-4ad6-abc2-adb010eddae0
 
 
 
+
+https://github.com/user-attachments/assets/c8e63a98-1253-4edf-93be-882f3641fec3
+
+
+
+
 ---
 
 ## 🔧 Uruchamianie projektu

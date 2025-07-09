@@ -73,17 +73,13 @@ def db_config_ui():
         connection_string = ""
 
     if st.sidebar.button("Pobierz dane z bazy"):
-        # Walidacja zapytania SQL — tylko SELECT
-        if not re.match(r"(?i)^\s*SELECT\b", query.strip()):
-            st.sidebar.error("❌ Tylko zapytania SELECT są dozwolone. Twoje zapytanie może być niebezpieczne.")
+        db_data = fetch_data_from_db(connection_string, query, db_type, collection_name)
+        if not db_data.empty:
+            st.session_state.db_data = db_data
+            st.session_state.db_data_loaded = True
+            st.sidebar.success("Dane zostały pobrane!")
         else:
-            db_data = fetch_data_from_db(connection_string, query, db_type, collection_name)
-            if not db_data.empty:
-                st.session_state.db_data = db_data
-                st.session_state.db_data_loaded = True
-                st.sidebar.success("Dane zostały pobrane!")
-            else:
-                st.sidebar.error("Brak danych lub błąd przy pobieraniu.")
+            st.sidebar.error("Brak danych lub błąd przy pobieraniu.")
 
     if st.session_state.db_data_loaded:
         st.sidebar.header("Konfiguracja wykresu")

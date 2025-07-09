@@ -14,7 +14,7 @@ initialize_session_state()
 st.title("📊 Twój Dashboard")
 
 #Odświeżanie aplikacji (by połączyć się z bazami danych w chmurach trzeba większy interval)
-st_autorefresh(interval=3000, limit=None, key="data_refresh")
+st_autorefresh(interval=4000, limit=None, key="data_refresh")
 
 config_choice = st.sidebar.radio("Wybierz konfigurację", ["API", "Baza danych", "Kamery"])
 

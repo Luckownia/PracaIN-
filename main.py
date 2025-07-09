@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import uuid
 from streamlit_autorefresh import st_autorefresh
 from fetchers.camera_fetcher import release_all_cameras
 from session.state_manager import initialize_session_state
@@ -14,8 +13,8 @@ initialize_session_state()
 
 st.title("📊 Twój Dashboard")
 
-# Odśwież co 1 sekundę
-st_autorefresh(interval=1000, limit=None, key="data_refresh")
+#Odświeżanie aplikacji (by połączyć się z bazami danych w chmurach trzeba większy interval)
+st_autorefresh(interval=3000, limit=None, key="data_refresh")
 
 config_choice = st.sidebar.radio("Wybierz konfigurację", ["API", "Baza danych", "Kamery"])
 
@@ -41,7 +40,7 @@ for idx, chart in enumerate(st.session_state.charts):
     chart_id = chart["id"]
     st.markdown(f"### Wykres {idx + 1} - {chart['title']} - Źródło: {chart['source']}")
 
-    # Przycisk usuwania wykresu
+    # Usuwanie wykresów
     if st.button(f"🗑️ Usuń wykres {idx + 1}", key=f"delete_chart_{chart_id}"):
         del st.session_state.chart_data[chart_id]
         st.session_state.charts = [
@@ -49,7 +48,7 @@ for idx, chart in enumerate(st.session_state.charts):
         ]
         st.rerun()
 
-    # Pobierz nowe dane
+    # Pobieranie nowych danych
     if chart["source"] == "API":
         new_data = fetch_data_from_api(chart["api_url"], chart["params"])
     else:
@@ -74,7 +73,7 @@ st.subheader("📺 Podgląd kamer (na żywo)")
 for idx, camera in enumerate(st.session_state.cameras):
     st.markdown(f"**Kamera:** `{camera}`")
 
-    # Przycisk usuwania kamery
+    # Usuwanie kamer
     if st.button(f"🗑️ Usuń kamerę {camera}", key=f"delete_camera_{camera}_{idx}"):
         st.session_state.cameras.remove(camera)
         st.rerun()
@@ -85,6 +84,6 @@ for idx, camera in enumerate(st.session_state.cameras):
     else:
         st.error(f"❌ Nie udało się pobrać obrazu z kamery: {camera}")
 
-# Jeśli nie ma już kamer — zwolnij zasoby
+# Zowlnienie zasobów gdy nie ma kamer
 if not st.session_state.cameras:
     release_all_cameras()

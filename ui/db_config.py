@@ -1,4 +1,5 @@
 import streamlit as st
+import re
 import uuid
 import pandas as pd
 from urllib.parse import quote_plus
@@ -54,6 +55,7 @@ def db_config_ui():
         connection_string = f"postgresql://{user}:{quote_plus(password)}@{host}:{port}/{database}"
     elif db_type == "MySQL":
         connection_string = f"mysql://{user}:{quote_plus(password)}@{host}:{port}/{database}"
+
     elif db_type == "MongoDB":
         if "mongodb.net" in host:
             # Atlas (chmurowy MongoDB)
@@ -71,11 +73,17 @@ def db_config_ui():
         connection_string = ""
 
     if st.sidebar.button("Pobierz dane z bazy"):
-        db_data = fetch_data_from_db(connection_string, query, db_type, collection_name)
-        if not db_data.empty:
-            st.session_state.db_data = db_data
-            st.session_state.db_data_loaded = True
-            st.sidebar.success("Dane zostały pobrane!")
+        # Walidacja zapytania SQL — tylko SELECT
+        if not re.match(r"(?i)^\s*SELECT\b", query.strip()):
+            st.sidebar.error("❌ Tylko zapytania SELECT są dozwolone. Twoje zapytanie może być niebezpieczne.")
+        else:
+            db_data = fetch_data_from_db(connection_string, query, db_type, collection_name)
+            if not db_data.empty:
+                st.session_state.db_data = db_data
+                st.session_state.db_data_loaded = True
+                st.sidebar.success("Dane zostały pobrane!")
+            else:
+                st.sidebar.error("Brak danych lub błąd przy pobieraniu.")
 
     if st.session_state.db_data_loaded:
         st.sidebar.header("Konfiguracja wykresu")

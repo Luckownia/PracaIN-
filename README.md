@@ -1,6 +1,7 @@
 # 📊 Generator Live Dashboard
 
 **Generator Live Dashboard** to wszechstronny dashboard stworzony w Streamlit, który umożliwia wizualizację danych z różnych źródeł — API, baz danych (PostgreSQL, MySQL, MongoDB) oraz strumieni z kamer na żywo.
+https://wtbtifchc8wj9thjjualnt.streamlit.app/
 
 ---
 

@@ -58,7 +58,7 @@ def api_config_ui():
         chart_type = st.sidebar.selectbox("Typ wykresu", ["Liniowy", "Słupkowy", "Punktowy"])
         x_column = st.sidebar.selectbox("Kolumna X", ["timestamp"] + list(st.session_state.api_data.columns))
         y_column = st.sidebar.selectbox("Kolumna Y", st.session_state.api_data.columns)
-        max_points = st.sidebar.number_input("Maksymalna liczba punktów", min_value=1, value=100)
+        max_points = st.sidebar.number_input("Maksymalna liczba punktów", min_value=1,value=10,max_value=100)
 
         if st.sidebar.button("Dodaj wykres"):
             chart_id = str(uuid.uuid4())

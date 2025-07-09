@@ -7,6 +7,9 @@ from fetchers.api_fetcher import fetch_data_from_api
 from fetchers.database_fetcher import fetch_data_from_db
 from fetchers.camera_fetcher import get_camera_frame
 from charts.plotter import render_chart
+import pymysql
+pymysql.install_as_MySQLdb()
+
 
 # Inicjalizacja sesji
 initialize_session_state()

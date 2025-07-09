@@ -16,10 +16,9 @@ def get_camera_frame(url):
 
         if success and frame is not None:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            camera_fail_count[url] = 0  # zresetuj licznik błędów
+            camera_fail_count[url] = 0
             return frame
         else:
-            # Zwiększ licznik błędów
             camera_fail_count[url] += 1
             if camera_fail_count[url] > 5:
                 print(f"❌ Kamera {url} nie odpowiada — zamykam połączenie.")
@@ -33,7 +32,7 @@ def get_camera_frame(url):
         return None
 
 def release_all_cameras():
-    # Kopiuj klucze do osobnej listy, by nie zmieniać słownika w czasie iteracji
+    # Klucze kopiowane do osobnej listy, by nie zmieniać słownika w czasie iteracji
     for url in list(camera_streams.keys()):
         try:
             cap = camera_streams[url]

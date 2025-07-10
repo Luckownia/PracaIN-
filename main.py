@@ -17,7 +17,7 @@ initialize_session_state()
 st.title("📊 Twój Dashboard")
 
 #Odświeżanie aplikacji (by połączyć się z bazami danych w chmurach trzeba większy interval)
-st_autorefresh(interval=4000, limit=None, key="data_refresh")
+st_autorefresh(interval=3000, limit=None, key="data_refresh")
 
 config_choice = st.sidebar.radio("Wybierz konfigurację", ["API", "Baza danych", "Kamery"])
 
@@ -81,11 +81,18 @@ for idx, camera in enumerate(st.session_state.cameras):
         st.session_state.cameras.remove(camera)
         st.rerun()
 
-    frame = get_camera_frame(camera)
-    if frame is not None:
-        st.image(frame, channels="RGB", use_container_width=True)
+    # Obsługa MJPEG lub snapshot (np. .jpg, .mjpg, faststream)
+    if any(ext in camera.lower() for ext in [".jpg", ".jpeg", ".mjpg", "snapshot", "faststream"]):
+        st.markdown(f"""
+        <img src="{camera}" width="100%" style="border: 2px solid #999; border-radius: 10px;">
+        """, unsafe_allow_html=True)
     else:
-        st.error(f"❌ Nie udało się pobrać obrazu z kamery: {camera}")
+        frame = get_camera_frame(camera)
+        if frame is not None:
+            st.image(frame, channels="RGB", use_container_width=True)
+        else:
+            st.error(f"❌ Nie udało się pobrać obrazu z kamery: {camera}")
+
 
 # Zowlnienie zasobów gdy nie ma kamer
 if not st.session_state.cameras:

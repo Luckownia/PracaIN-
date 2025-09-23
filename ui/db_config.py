@@ -72,6 +72,9 @@ def db_config_ui():
         connection_string = ""
 
     if st.sidebar.button("Pobierz dane z bazy"):
+        if db_type == "MongoDB":
+            query=None  # MongoDB nie potrzebuje zapytania SQL
+            
         db_data = fetch_data_from_db(connection_string, query, db_type, collection_name)
         if not db_data.empty:
             st.session_state.db_data = db_data
@@ -108,4 +111,5 @@ def db_config_ui():
                 st.session_state.db_data_loaded = False
                 st.session_state.chart_title = ""
                 st.rerun()
+
 

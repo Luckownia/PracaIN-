@@ -17,7 +17,7 @@ initialize_session_state()
 st.title("📊 Twój Dashboard")
 
 #Odświeżanie aplikacji (by połączyć się z bazami danych w chmurach trzeba większy interval)
-st_autorefresh(interval=1000, limit=None, key="data_refresh")
+st_autorefresh(interval=4000, limit=None, key="data_refresh")
 
 config_choice = st.sidebar.radio("Wybierz konfigurację", ["API", "Baza danych", "Kamery"])
 
@@ -97,6 +97,7 @@ for idx, camera in enumerate(st.session_state.cameras):
 # Zowlnienie zasobów gdy nie ma kamer
 if not st.session_state.cameras:
     release_all_cameras()
+
 
 
 

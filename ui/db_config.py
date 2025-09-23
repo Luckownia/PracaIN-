@@ -45,11 +45,10 @@ def db_config_ui():
         collection_name = st.sidebar.text_input("Kolekcja (MongoDB)", "")
     else:
         collection_name = ""
-
-    query = st.sidebar.text_area(
-        "Zapytanie SQL",
-        help="Wprowadź pełne zapytanie SELECT, np.: SELECT * FROM sensors WHERE timestamp > NOW() - INTERVAL '1 day'.\nPamiętaj: tylko zapytania odczytujące dane są dozwolone."
-    )
+        query = st.sidebar.text_area(
+            "Zapytanie SQL",
+            help="Wprowadź pełne zapytanie SELECT, np.: SELECT * FROM sensors WHERE timestamp > NOW() - INTERVAL '1 day'.\nPamiętaj: tylko zapytania odczytujące dane są dozwolone."
+        )
 
     if db_type == "PostgreSQL":
         connection_string = f"postgresql://{user}:{quote_plus(password)}@{host}:{port}/{database}"
@@ -109,3 +108,4 @@ def db_config_ui():
                 st.session_state.db_data_loaded = False
                 st.session_state.chart_title = ""
                 st.rerun()
+

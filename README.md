@@ -1,6 +1,6 @@
 # 📊 Generator Live Dashboard
 
-**Generator Live Dashboard** to wszechstronny dashboard stworzony w Streamlit, który umożliwia wizualizację danych z różnych źródeł — API, baz danych (PostgreSQL, MySQL, MongoDB) oraz strumieni z kamer na żywo.
+**Generator Live Dashboard** to wszechstronny generator dashboard-ów stworzony w Streamlit, który umożliwia wizualizację danych z różnych źródeł — API, baz danych (PostgreSQL, MySQL, MongoDB) oraz strumieni z kamer na żywo.
 
 https://realtimedashboard.streamlit.app/
 ---
@@ -9,7 +9,7 @@ https://realtimedashboard.streamlit.app/
 
 - 🔌 **Połączenia API** – pobieraj dane z zewnętrznych API i twórz wykresy w czasie rzeczywistym.
 - 🛢️ **Obsługa baz danych** – wizualizuj dane z PostgreSQL, MySQL i MongoDB.
-- 🎥 **Podgląd z kamer** – dodaj strumienie RTSP/HTTP i oglądaj obraz na żywo.
+- 🎥 **Podgląd z kamer** – dodaj strumienie kamer i oglądaj obraz na żywo.
 - 📈 **Dynamiczne wykresy** – generowanie wykresów liniowych, słupkowych i punktowych z Plotly.
 
 ---
@@ -17,7 +17,7 @@ https://realtimedashboard.streamlit.app/
 ## 🧰 Technologie
 
 - [Streamlit](https://streamlit.io/)
-- [Plotly](https://plotly.com/python/)
+- [Plotly](https://plotly.com/python/) - obsługa wykresów
 - [OpenCV](https://opencv.org/) – obsługa kamer
 - [SQLAlchemy](https://www.sqlalchemy.org/) – obsługa relacyjnych baz danych
 - [PyMongo](https://pymongo.readthedocs.io/en/stable/) – obsługa MongoDB
@@ -132,7 +132,7 @@ Po uruchomieniu aplikacji w przeglądarce (domyślnie `http://localhost:8501`) w
 
 │ ├── api_fetcher.py # Pobieranie danych z API
 
-│ ├── camera_fetcher.py # Obsługa kamer (OpenCV)
+│ ├── camera_fetcher.py # Obsługa kamer 
 
 │ └── database_fetcher.py # Obsługa baz danych SQL/MongoDB/PostreSql
 

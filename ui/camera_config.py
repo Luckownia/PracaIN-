@@ -29,5 +29,6 @@ def camera_config_ui():
 
     camera_url = st.sidebar.text_input("Dodaj kamerę URL")
     if st.sidebar.button("Dodaj kamerę") and camera_url:
-        st.session_state.cameras.append(camera_url)
+        st.session_state.dashboard_items.append({"kind": "camera", "data": camera_url})
         st.sidebar.success(f"Kamera {camera_url} dodana!")
+

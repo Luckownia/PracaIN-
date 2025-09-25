@@ -62,7 +62,7 @@ def api_config_ui():
 
         if st.sidebar.button("Dodaj wykres"):
             chart_id = str(uuid.uuid4())
-            st.session_state.charts.append({
+            st.session_state.dashboard_items.append({"kind": "chart", "data": {
                 "id": chart_id,
                 "title": chart_title,
                 "source": "API",
@@ -72,10 +72,11 @@ def api_config_ui():
                 "api_url": api_url,
                 "params": params,
                 "max_points": max_points
-            })
+            }})
             st.session_state.chart_data[chart_id] = pd.DataFrame()
             st.session_state.api_fetched = False
             st.session_state.chart_title = ""
             st.session_state.api_url = ""
             st.session_state.params_input = "{}"
             st.rerun()
+

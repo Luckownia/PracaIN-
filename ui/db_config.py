@@ -92,23 +92,27 @@ def db_config_ui():
         if st.sidebar.button("Dodaj wykres"):
             if chart_title:
                 chart_id = str(uuid.uuid4())
-                st.session_state.charts.append({
-                    "id": chart_id,
-                    "title": chart_title,
-                    "source": "Baza danych",
-                    "type": chart_type,
-                    "x_column": x_column,
-                    "y_column": y_column,
-                    "db_connection": connection_string,
-                    "query": query,
-                    "collection_name": collection_name,
-                    "max_points": max_points
+                st.session_state.dashboard_items.append({
+                    "kind": "chart",
+                    "data": {
+                        "id": chart_id,
+                        "title": chart_title,
+                        "source": "Baza danych",
+                        "type": chart_type,
+                        "x_column": x_column,
+                        "y_column": y_column,
+                        "db_connection": connection_string,
+                        "query": query,
+                        "collection_name": collection_name,
+                        "max_points": max_points
+                    }
                 })
                 st.session_state.chart_data[chart_id] = pd.DataFrame()
                 st.sidebar.success(f"Wykres '{chart_title}' dodany!")
                 st.session_state.db_data_loaded = False
                 st.session_state.chart_title = ""
                 st.rerun()
+
 
 
 

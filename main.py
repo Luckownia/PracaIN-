@@ -19,7 +19,7 @@ initialize_session_state()
 st.title("📊 Twój Dashboard")
 
 # Odświeżanie aplikacji
-st_autorefresh(interval=5000, limit=None, key="data_refresh")
+st_autorefresh(interval=1000, limit=None, key="data_refresh")
 
 config_choice = st.sidebar.radio("Wybierz konfigurację", ["API", "Baza danych", "Kamery"])
 
@@ -128,4 +128,5 @@ for i in range(0, len(items), num_cols):
 # Zwolnienie zasobów gdy brak kamer w dashboardzie
 if not any(item["kind"] == "camera" for item in st.session_state.dashboard_items):
     release_all_cameras()
+
 

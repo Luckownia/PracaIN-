@@ -36,70 +36,66 @@ elif config_choice == "Kamery":
     from ui.camera_config import camera_config_ui
     camera_config_ui()
 
-# --- Wyświetlanie wykresów i kamer ---
-st.subheader("📈 Wykresy")
+st.subheader("📈 Dashboard")
 
-for idx, chart in enumerate(st.session_state.charts):
-    chart_id = chart["id"]
-    st.markdown(f"### Wykres {idx + 1} - {chart['title']} - Źródło: {chart['source']}")
+# Łączenie wykresów i kamer w jeden grid
+items = st.session_state.charts + st.session_state.cameras
+num_cols = 3
 
-    # Usuwanie wykresów
-    if st.button(f"🗑️ Usuń wykres {idx + 1}", key=f"delete_chart_{chart_id}"):
-        del st.session_state.chart_data[chart_id]
-        st.session_state.charts = [
-            c for c in st.session_state.charts if c["id"] != chart_id
-        ]
-        st.rerun()
+for i in range(0, len(items), num_cols):
+    cols = st.columns(num_cols)
+    for j, item in enumerate(items[i:i + num_cols]):
+        with cols[j]:
+            # Wykres
+            if isinstance(item, dict) and "title" in item:
+                chart_id = item["id"]
 
-    # Pobieranie nowych danych
-    if chart["source"] == "API":
-        new_data = fetch_data_from_api(chart["api_url"], chart["params"])
-    else:
-        new_data = fetch_data_from_db(
-            chart["db_connection"], chart["query"],
-            st.session_state.db_type, chart.get("collection_name", "")
-        )
+                # Pobieranie nowych danych
+                if item["source"] == "API":
+                    new_data = fetch_data_from_api(item["api_url"], item["params"])
+                else:
+                    new_data = fetch_data_from_db(
+                        item["db_connection"], item["query"],
+                        st.session_state.db_type, item.get("collection_name", "")
+                    )
 
-    if not new_data.empty:
-        st.session_state.chart_data[chart_id] = pd.concat(
-            [st.session_state.chart_data[chart_id], new_data], ignore_index=True
-        )
+                if not new_data.empty:
+                    st.session_state.chart_data[chart_id] = pd.concat(
+                        [st.session_state.chart_data[chart_id], new_data], ignore_index=True
+                    )
 
-    data = st.session_state.chart_data[chart_id]
-    if "max_points" in chart and len(data) > chart["max_points"]:
-        data = data.tail(chart["max_points"])
+                data = st.session_state.chart_data[chart_id]
+                if "max_points" in item and len(data) > item["max_points"]:
+                    data = data.tail(item["max_points"])
 
-    fig = render_chart(chart, data)
+                fig = render_chart(item, data)
+                st.plotly_chart(fig, use_container_width=True)
 
-st.subheader("📺 Podgląd kamer (na żywo)")
+                # Usuwanie wykresu
+                if st.button(f"🗑️ Usuń wykres {item['title']}", key=f"delete_chart_{chart_id}"):
+                    del st.session_state.chart_data[chart_id]
+                    st.session_state.charts = [c for c in st.session_state.charts if c["id"] != chart_id]
+                    st.rerun()
 
-for idx, camera in enumerate(st.session_state.cameras):
-    st.markdown(f"**Kamera:** `{camera}`")
+            # Kamera
+            else:
+                camera = item
+                st.markdown(f"**Kamera:** `{camera}`")
 
-    # Usuwanie kamer
-    if st.button(f"🗑️ Usuń kamerę {camera}", key=f"delete_camera_{camera}_{idx}"):
-        st.session_state.cameras.remove(camera)
-        st.rerun()
+                if st.button(f"🗑️ Usuń kamerę {camera}", key=f"delete_camera_{camera}_{i}_{j}"):
+                    st.session_state.cameras.remove(camera)
+                    st.rerun()
 
-    # Obsługa MJPEG lub snapshot (np. .jpg, .mjpg, faststream)
-    if any(ext in camera.lower() for ext in [".jpg", ".jpeg", ".mjpg", "snapshot", "faststream"]):
-        st.markdown(f"""
-        <img src="{camera}" width="100%" style="border: 2px solid #999; border-radius: 10px;">
-        """, unsafe_allow_html=True)
-    else:
-        frame = get_camera_frame(camera)
-        if frame is not None:
-            st.image(frame, channels="RGB", use_container_width=True)
-        else:
-            st.error(f"❌ Nie udało się pobrać obrazu z kamery: {camera}")
+                # Obsługa MJPEG lub snapshot
+                if any(ext in camera.lower() for ext in [".jpg", ".jpeg", ".mjpg", "snapshot", "faststream"]):
+                    st.image(camera, use_container_width=True)
+                else:
+                    frame = get_camera_frame(camera)
+                    if frame is not None:
+                        st.image(frame, channels="RGB", use_container_width=True)
+                    else:
+                        st.error(f"❌ Nie udało się pobrać obrazu z kamery: {camera}")
 
-
-# Zowlnienie zasobów gdy nie ma kamer
+# Zwolnienie zasobów gdy brak kamer
 if not st.session_state.cameras:
     release_all_cameras()
-
-
-
-
-
-

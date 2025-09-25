@@ -28,3 +28,6 @@ def initialize_session_state():
         st.session_state.db_type = ""
     if 'db_data' not in st.session_state:
         st.session_state.db_data = pd.DataFrame()
+    if "dashboard_items" not in st.session_state:
+        st.session_state.dashboard_items = []
+

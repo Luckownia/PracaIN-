@@ -10,6 +10,8 @@ from charts.plotter import render_chart
 import pymysql
 pymysql.install_as_MySQLdb()
 
+# Ustawienia strony
+st.set_page_config(layout="wide")
 
 # Inicjalizacja sesji
 initialize_session_state()
@@ -99,3 +101,4 @@ for i in range(0, len(items), num_cols):
 # Zwolnienie zasobów gdy brak kamer
 if not st.session_state.cameras:
     release_all_cameras()
+
